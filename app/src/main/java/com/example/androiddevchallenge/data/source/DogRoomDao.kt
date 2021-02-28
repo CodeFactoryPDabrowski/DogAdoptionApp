@@ -9,13 +9,13 @@ import com.example.androiddevchallenge.data.source.entity.DogDb
 abstract class DogRoomDao {
 
     @Insert
-    abstract fun save(dogs: List<DogDb>)
+    abstract suspend fun save(dogs: List<DogDb>)
 
     @Query("SELECT * FROM dogs ORDER BY id ASC")
-    abstract fun getAll(): List<DogDb>
+    abstract suspend fun getAll(): List<DogDb>
 
     @Query("SELECT * FROM dogs WHERE id = :id")
-    abstract fun get(id: Int): DogDb
+    abstract suspend fun get(id: Int): DogDb
 
 
 }
