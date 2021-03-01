@@ -24,12 +24,16 @@ import androidx.hilt.navigation.HiltViewModelFactory
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.navArgument
 import androidx.navigation.compose.rememberNavController
+import com.example.androiddevchallenge.ui.feature.dog_details.DogDetailsScreen
 import com.example.androiddevchallenge.ui.feature.dog_list.DogListScreen
 import com.example.androiddevchallenge.ui.theme.MyTheme
 import dagger.hilt.android.AndroidEntryPoint
+import java.lang.IllegalArgumentException
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -46,8 +50,19 @@ class MainActivity : AppCompatActivity() {
 @Composable
 fun MyApp() {
     val navController = rememberNavController()
-    NavHost(navController, startDestination = "DogsList") {
-        composable("DogsList") { DogListScreen(it.hiltViewModel(), navController) }
+    NavHost(navController, startDestination = "dogsList") {
+        composable("dogsList") { DogListScreen(it.hiltViewModel(), navController) }
+        composable(
+            "dogDetails/{dogId}",
+            arguments = listOf(navArgument("dogId") { type = NavType.IntType })
+        ) { backStackEntry ->
+            DogDetailsScreen(
+                backStackEntry.arguments?.getInt("dogId")
+                    ?: throw IllegalArgumentException("Cannot show details without id"),
+                backStackEntry.hiltViewModel(),
+                navController
+            )
+        }
     }
 }
 
